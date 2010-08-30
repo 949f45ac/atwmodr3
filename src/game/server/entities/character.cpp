@@ -498,11 +498,11 @@ bool CCharacter::GiveSpecial(int Special)
 	{
 		m_Core.EnableSpecial(1, g_pData->m_Specials.m_aId[Special].m_Duration * SERVER_TICK_SPEED / 1000);
 	}
-	else if (Special = SPECIAL_POWERSUIT)
+	else if (Special == SPECIAL_POWERSUIT)
 	{
 		m_Core.EnableSpecial(2, g_pData->m_Specials.m_aId[Special].m_Duration * SERVER_TICK_SPEED / 1000);
 	}
-	else if (Special = SPECIAL_REVERSEGRAVITY)
+	else if (Special == SPECIAL_REVERSEGRAVITY)
 	{
 		m_Core.EnableSpecial(3, g_pData->m_Specials.m_aId[Special].m_Duration * SERVER_TICK_SPEED / 1000);
 	}
@@ -554,7 +554,7 @@ void CCharacter::Tick()
 		
 		m_pPlayer->m_ForceBalanced = false;
 	}
-
+	
 	m_Core.m_Input = m_Input;
 	m_Core.Tick(true);
 	

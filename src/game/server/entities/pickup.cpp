@@ -16,10 +16,20 @@ CPickup::CPickup(CGameWorld *pGameWorld, int Type, int SubType)
 
 void CPickup::Reset()
 {
-	if (g_pData->m_aPickups[m_Type].m_Spawndelay > 0)
-		m_SpawnTick = Server()->Tick() + Server()->TickSpeed() * g_pData->m_aPickups[m_Type].m_Spawndelay;
+	if (m_Type != POWERUP_SPECIAL)
+	{	
+		if (g_pData->m_aPickups[m_Type].m_Spawndelay > 0)
+			m_SpawnTick = Server()->Tick() + Server()->TickSpeed() * g_pData->m_aPickups[m_Type].m_Spawndelay;
+		else
+			m_SpawnTick = -1;
+	}
 	else
-		m_SpawnTick = -1;
+	{
+		if (g_pData->m_Specials.m_aId[m_Subtype].m_Spawndelay > 0)
+			m_SpawnTick = Server()->Tick() + Server()->TickSpeed() * g_pData->m_Specials.m_aId[m_Subtype].m_Spawndelay;
+		else
+			m_SpawnTick = -1;
+	}
 }
 
 void CPickup::Tick()

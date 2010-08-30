@@ -115,6 +115,23 @@ void CPlayers::RenderHook(
 			}
 		}	
 	}
+	
+	if (Player.m_SpecialSuit == true)
+	{
+		// change the skin for the player to the suit
+		int Skin = m_pClient->m_pSkins->Find("x_suit");
+		if(Skin != -1)
+		{
+			if(IsTeamplay)
+				RenderInfo.m_Texture = m_pClient->m_pSkins->Get(Skin)->m_ColorTexture;
+			else
+			{
+				RenderInfo.m_Texture = m_pClient->m_pSkins->Get(Skin)->m_OrgTexture;
+				RenderInfo.m_ColorBody = vec4(1,1,1,1);
+				RenderInfo.m_ColorFeet = vec4(1,1,1,1);
+			}
+		}	
+	}
 
 	float IntraTick = Client()->IntraGameTick();
 

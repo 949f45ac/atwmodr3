@@ -208,7 +208,7 @@ public:
 	void Reset();
 	void Tick(bool UseInput);
 	void Move();
-	void CCharacterCore::EnableSpecial(int Type, int Duration);
+	void EnableSpecial(int Type, int Duration);
 	
 	void Read(const CNetObj_CharacterCore *pObjCore);
 	void Write(CNetObj_CharacterCore *pObjCore);

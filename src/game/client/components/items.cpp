@@ -79,7 +79,11 @@ void CItems::RenderProjectile(const CNetObj_Projectile *pCurrent, int ItemId)
 
 void CItems::RenderPickup(const CNetObj_Pickup *pPrev, const CNetObj_Pickup *pCurrent)
 {
-	Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
+	if (pCurrent->m_Type == POWERUP_SPECIAL && !(pCurrent->m_Subtype == SPECIAL_YELLOWARMOR || pCurrent->m_Subtype == SPECIAL_NINJAPWR))
+		Graphics()->TextureSet(g_pData->m_aImages[IMAGE_EGAME].m_Id);
+	else
+		Graphics()->TextureSet(g_pData->m_aImages[IMAGE_GAME].m_Id);
+		
 	Graphics()->QuadsBegin();
 	vec2 Pos = mix(vec2(pPrev->m_X, pPrev->m_Y), vec2(pCurrent->m_X, pCurrent->m_Y), Client()->IntraGameTick());
 	float Angle = 0.0f;
@@ -90,22 +94,34 @@ void CItems::RenderPickup(const CNetObj_Pickup *pPrev, const CNetObj_Pickup *pCu
 		RenderTools()->SelectSprite(g_pData->m_Weapons.m_aId[clamp(pCurrent->m_Subtype, 0, NUM_WEAPONS-1)].m_pSpriteBody);
 		Size = g_pData->m_Weapons.m_aId[clamp(pCurrent->m_Subtype, 0, NUM_WEAPONS-1)].m_VisualSize;
 	}
-	else
+	else if (pCurrent->m_Type != POWERUP_SPECIAL)
 	{
 		const int c[] = {
 			SPRITE_PICKUP_HEALTH,
 			SPRITE_PICKUP_ARMOR,
 			SPRITE_PICKUP_WEAPON,
-			SPRITE_PICKUP_NINJA
 			};
 		RenderTools()->SelectSprite(c[pCurrent->m_Type]);
+	}
+	else
+	{
+		const int c[] = {
+			0,
+			SPRITE_HEALTH_OVERFILL,
+			SPRITE_ARMOR_FULL,
+			SPRITE_ARMOR_OVERFILL,
+			SPRITE_PICKUP_SUIT,
+			SPRITE_PICKUP_NINJA,
+			SPRITE_PICKUP_HOOK,
+			};
+		RenderTools()->SelectSprite(c[pCurrent->m_Subtype]);
 
-		if(c[pCurrent->m_Type] == SPRITE_PICKUP_NINJA)
-		{
+		if(c[pCurrent->m_Subtype] == SPRITE_PICKUP_NINJA)
 			m_pClient->m_pEffects->PowerupShine(Pos, vec2(96,18));
-			Size *= 2.0f;
-			Pos.x -= 10.0f;
-		}
+		else if(c[pCurrent->m_Subtype] == SPRITE_PICKUP_HOOK)
+			m_pClient->m_pEffects->PowerupShine(Pos, vec2(36,110));
+		Size *= 2.0f;
+		Pos.x -= 10.0f;
 	}
 
 	Graphics()->QuadsSetRotation(Angle);

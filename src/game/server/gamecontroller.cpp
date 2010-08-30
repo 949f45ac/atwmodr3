@@ -156,7 +156,7 @@ bool IGameController::OnEntity(int Index, vec2 Pos)
 	else if(Index == ENTITY_POWERUP_NINJA && g_Config.m_SvPowerups)
 	{
 		Type = POWERUP_SPECIAL;
-		SubType = WEAPON_NINJA;
+		SubType = SPECIAL_NINJAPWR;
 	}
 	else if(Index == ENTITY_POWERUP_HOOK && g_Config.m_SvPowerups)
 	{
