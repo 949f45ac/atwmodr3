@@ -196,6 +196,8 @@ public:
 	int m_SuitDuration;
 	int m_GravityDuration;
 	
+	vec2 m_PowerHookedDirection;
+	
 	int m_Jumped;
 	
 	int m_Direction;

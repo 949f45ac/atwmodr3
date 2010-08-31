@@ -382,6 +382,11 @@ void CCharacterCore::Tick(bool UseInput)
 					m_Vel.x = SaturatedAdd(-DragSpeed, DragSpeed, m_Vel.x, -Accel*Dir.x*0.25f);
 					m_Vel.y = SaturatedAdd(-DragSpeed, DragSpeed, m_Vel.y, -Accel*Dir.y*0.25f);
 				}
+				if(m_HookPower)
+				{
+					vec2 dir = normalize(m_Pos - p->m_Pos);
+					p->m_PowerHookedDirection = dir;
+				}
 			}
 		}
 	}	

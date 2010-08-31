@@ -494,6 +494,18 @@ bool CCharacter::GiveSpecial(int Special)
 		
 		GameServer()->CreateSound(m_Pos, SOUND_PICKUP_NINJA);
 	}
+	else if (Special == SPECIAL_YELLOWARMOR)
+	{
+		IncreaseArmor(5);
+	}
+	else if (Special == SPECIAL_REDARMOR)
+	{
+		IncreaseArmor(10);
+	}
+	else if (Special == SPECIAL_MEGAHEALTH)
+	{
+		IncreaseHealth(10);
+	}
 	else if (Special == SPECIAL_HOOKPWR)
 	{
 		m_Core.EnableSpecial(1, g_pData->m_Specials.m_aId[Special].m_Duration * SERVER_TICK_SPEED / 1000);
@@ -566,7 +578,17 @@ void CCharacter::Tick()
 	{
 		Die(m_pPlayer->GetCID(), WEAPON_WORLD);
 	}
-
+	
+	// handle hook special
+ 	if((m_Core.m_HookedPlayer != -1 && m_Core.m_HookPower) && (m_Core.m_HookTick % 17 == 0))
+	{
+		CCharacter *tChr = GameServer()->m_World.ClosestCharacter(m_Core.m_HookPos, 1.0f, this);
+		tChr->TakeDamage(tChr->m_Core.m_PowerHookedDirection * 0.001f, 
+		GameServer()->Tuning()->m_HookDamage,
+		m_pPlayer->GetCID(),
+		WEAPON_HOOK);
+	} 
+	
 	// kill player when leaving gamelayer
 	if((int)m_Pos.x/32 < -200 || (int)m_Pos.x/32 > GameServer()->Collision()->GetWidth()+200 ||
 		(int)m_Pos.y/32 < -200 || (int)m_Pos.y/32 > GameServer()->Collision()->GetHeight()+200)
@@ -715,7 +737,10 @@ void CCharacter::Die(int Killer, int Weapon)
 bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 {
 	m_Core.m_Vel += Force;
-	
+	if(Weapon == WEAPON_GRENADE && m_Core.m_Suit)
+		return true;
+	else
+	{
 	if(GameServer()->m_pController->IsFriendlyFire(m_pPlayer->GetCID(), From) && !g_Config.m_SvTeamdamage)
 		return false;
 
@@ -796,6 +821,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon)
 	m_EmoteStop = Server()->Tick() + 500 * Server()->TickSpeed() / 1000;
 
 	return true;
+	}
 }
 
 void CCharacter::Snap(int SnappingClient)

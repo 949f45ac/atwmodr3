@@ -116,7 +116,7 @@ void CPlayers::RenderHook(
 		}	
 	}
 	
-	if (Player.m_SpecialSuit == true)
+	if (Player.m_SpecialSuit)
 	{
 		// change the skin for the player to the suit
 		int Skin = m_pClient->m_pSkins->Find("x_suit");
